@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Real Estate Hub</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Real Estate Hub</h1>
+      <nav>
+        <a href="#">Buy</a>
+        <a href="#">Sell</a>
+        <a href="#">Rent</a>
+      </nav>
+    </div>
+  </header>
+
+  <section id="search">
+    <div class="container">
+      <h2>Find Your Dream Home</h2>
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Enter city, neighborhood, or address">
+        <button id="search-btn">Search</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="property-listings">
+    <div class="container">
+      <h2>Featured Listings</h2>
+
+      <div class="property-card">
+        <img src="./Modern Faemily House.png" alt="ehtedgfbyq53hatwezbsdfxv">
+        <h3>Modern Family House</h3>
+        <p>3 beds | 2 baths | 1,500 sqft</p>
+        <p>$500,000</p>
+        <button class="details-btn" onclick="showDetails('Modern Family House')">View Details</button>
+      </div>
+
+      <div class="property-card">
+        <img src="./Luxury Villa.jpg" alt="">
+        <h3>Luxury Villa</h3>
+        <p>5 beds | 4 baths | 3,000 sqft</p>
+        <p>$1,200,000</p>
+        <button class="details-btn" onclick="showDetails('Luxury Villa')">View Details</button>
+      </div>
+
+      <div class="property-card">
+        <img src="./urban appartment.jpg" alt="">
+        <h3>Urban Apartment</h3>
+        <p>2 beds | 1 bath | 900 sqft</p>
+        <p>$300,000</p>
+        <button class="details-btn" onclick="showDetails('Urban Apartment')">View Details</button>
+      </div>
+
+      <div class="property-card">
+        <img src="./Cozy Cottage.jpg" alt="">
+        <h3>Cozy Cottage</h3>
+        <p>2 beds | 1 bath | 1,000 sqft</p>
+        <p>$250,000</p>
+        <button class="details-btn" onclick="showDetails('Cozy Cottage')">View Details</button>
+      </div>
+
+      <div class="property-card">
+        <img src="./Spacious Penthouse.jpg" alt="">
+        <h3>Spacious Penthouse</h3>
+        <p>4 beds | 4 baths | 2,500 sqft</p>
+        <p>$900,000</p>
+        <button class="details-btn" onclick="showDetails('Spacious Penthouse')">View Details</button>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="map">
+    <h2>Explore Properties on Map</h2>
+    <div id="mapid"></div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2024 Real Estate Hub. All rights reserved.</p>
+    </div>
+  </footer>
+
+ 
+<div id="jsonbuttons" style="margin: 10px;">
+    <button id="showRent">Show Rent</button>
+    <button id="showSale">Show Sale</button>
+    <button id="showSchools">Show Schools</button>
+</div>
+
+  <script src="./rent.js"></script>
+  <script src="./sale.js"></script>
+  <script src="./schools.js"></script>
+  <script>
+    var map = L.map('mapid').setView([ 38.907192,-77.036871], 3);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+   
+
+   // Define GeoJSON layers
+var rentLayer = L.geoJSON(rent, {
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup("<b>Price: </b>" + feature.properties.price + "<br>" +
+                        "<b>Bedrooms: </b>" + feature.properties.bedrooms + "<br>" +
+                        "<b>Address: </b>" + feature.properties.address);
+    }
+});
+
+var saleLayer = L.geoJSON(sale, {
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup("<b>Price: </b>" + feature.properties.price + "<br>" +
+                        "<b>Bedrooms: </b>" + feature.properties.bedrooms + "<br>" +
+                        "<b>Address: </b>" + feature.properties.address);
+    }
+});
+
+var schoolsLayer = L.geoJSON(schools, {
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup("<b>Name: </b>" + feature.properties.name + "<br>" +
+                        "<b>School Type: </b>" + feature.properties.type + "<br>" +
+                        "<b>Address: </b>" + feature.properties.address);
+    }
+});
+
+// Button click event handlers
+document.getElementById('showRent').addEventListener('click', function() {
+    // Clear other layers
+    map.removeLayer(saleLayer);
+    map.removeLayer(schoolsLayer);
+    
+    // Add rent layer
+    map.addLayer(rentLayer);
+});
+
+document.getElementById('showSale').addEventListener('click', function() {
+    // Clear other layers
+    map.removeLayer(rentLayer);
+    map.removeLayer(schoolsLayer);
+    
+    // Add sale layer
+    map.addLayer(saleLayer);
+});
+
+document.getElementById('showSchools').addEventListener('click', function() {
+    // Clear other layers
+    map.removeLayer(rentLayer);
+    map.removeLayer(saleLayer);
+    
+    // Add schools layer
+    map.addLayer(schoolsLayer);
+});
+
+  </script>
+ 
+</body>
+</html>
